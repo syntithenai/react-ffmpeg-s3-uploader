@@ -84,7 +84,7 @@ class MediaFileUpload extends React.Component {
     this.createWaveSurfer = this.createWaveSurfer.bind(this);
     this.zoom = this.zoom.bind(this);
     this.handleRegionChange = this.handleRegionChange.bind(this);
-    
+    this.previewPlay = this.previewPlay.bind(this);
   }
     // init
     componentDidMount() {
@@ -611,7 +611,7 @@ class MediaFileUpload extends React.Component {
                 transcodeArguments.push(this.secondsToProgress(this.state.cropStart));
                 this.setState({"startOffset":this.state.cropStart});
             }
-            if (this.state.regions.One.end > 0) {
+            if (this.state.cropEnd > 0) {
                 transcodeArguments.push("-t");
                 let duration = this.secondsToProgress(this.state.cropEnd - this.state.cropStart);
                 if (duration > this.props.videoMaxLength) duration = this.props.videoMaxLength;
@@ -619,7 +619,7 @@ class MediaFileUpload extends React.Component {
             }
             transcodeArguments = ["-i","input_"+that.state.fileName,"-strict","-2"].concat(transcodeArguments);
             transcodeArguments.push(that.state.fileNameBase + ".video.webm");
-            
+            console.log(['TC',transcodeArguments]);
             that.state.webmWorker.postMessage({
               type: "run",
               arguments: transcodeArguments,
@@ -650,7 +650,7 @@ class MediaFileUpload extends React.Component {
                 transcodeArguments.push(this.secondsToProgress(this.state.cropStart));
                 this.setState({"startOffset":this.state.cropStart});
             }
-            if (this.state.regions.One.end > 0) {
+            if (this.state.cropEnd > 0) {
                 transcodeArguments.push("-t");
                 let duration = this.secondsToProgress(this.state.cropEnd - this.state.cropStart);
                 if (duration > this.props.videoMaxLength) duration = this.props.videoMaxLength;
@@ -695,6 +695,7 @@ class MediaFileUpload extends React.Component {
             }
             transcodeArguments = ["-i","input_"+that.state.fileName,"-vf","showinfo","-strict","-2"].concat(transcodeArguments);
             transcodeArguments.push(that.state.fileNameBase + ".audio.webm");
+            console.log(['TC',transcodeArguments]);
             that.state.webmWorker.postMessage({
               type: "run",
               arguments: transcodeArguments,
@@ -731,7 +732,7 @@ class MediaFileUpload extends React.Component {
             }
             transcodeArguments = ["-i","input_"+that.state.fileName,"-vf","showinfo","-strict","-2"].concat(transcodeArguments);
             transcodeArguments.push(that.state.fileNameBase + ".mp3");
-            
+            console.log(['TC',transcodeArguments]);
             that.state.mp4Worker.postMessage({
               type: "run",
               arguments:transcodeArguments,
@@ -763,6 +764,7 @@ class MediaFileUpload extends React.Component {
         }
         transcodeArguments = ["-i","input_"+that.state.fileName,"-vf","showinfo","-strict","-2","-ac","2","-b:a","48k","-ar","16000"].concat(transcodeArguments);
         transcodeArguments.push(that.state.fileNameBase + ".low.mp3");
+        console.log(['TC',transcodeArguments]);
         that.state.mp4Worker.postMessage({
           type: "run",
           arguments: transcodeArguments,
@@ -883,11 +885,14 @@ class MediaFileUpload extends React.Component {
         }
     }
     
-    
     isPreview() {
         if (this.state.imageUrlPreview || this.state.audioUrlPreview ||this.state.videoUrlPreview) {
             return true;
         } else return false;
+    };
+    
+    previewPlay() {
+        this._wavesurfer.play(this.state.cropStart,this.state.cropEnd);
     };
     
     progressToSeconds(progress) {
@@ -900,10 +905,16 @@ class MediaFileUpload extends React.Component {
     };
     
     secondsToProgress(progress) {
-        var date = new Date(null);
-        date.setSeconds(parseInt(progress)); // specify value for SECONDS here
-        let val= date.toISOString().substr(11, 8);
-        return val;
+        let hours=parseInt(progress/3600,10);
+        let minutes=parseInt(progress/60,10);
+        let remainder = parseInt((progress - hours)*100,10)/100;
+        let hoursString=(hours > 10) ? String(hours) : '0'+String(hours);
+        let minutesString=(minutes > 10) ? String(minutes) : '0'+String(minutes);
+        return hoursString+":"+minutesString+":"+String(remainder);
+        //var date = new Date(null);
+        //date.setSeconds(parseInt(progress)); // specify value for SECONDS here
+        //let val= date.toISOString().substr(11, 8);
+        //return val;
     };
 
     zoom(e) {
@@ -1026,7 +1037,7 @@ class MediaFileUpload extends React.Component {
               value={this.state.cropEnd}
               onChange={this.handleRegionChange}
             />
-            {(this.state.audioUrlPreview || this.state.videoUrlPreview) &&  <span>&nbsp;&nbsp;<button style={{float:'right'}}  onClick={this.crop} >Crop and Upload</button></span>}
+            {(this.state.audioUrlPreview || this.state.videoUrlPreview) &&  <span>&nbsp;&nbsp;<button style={{float:'right'}}  onClick={this.crop} >Crop and Upload</button>&nbsp;&nbsp;<button style={{float:'right'}}  onClick={this.previewPlay} >Preview</button></span>}
           </div>
         </div>}
         
@@ -1089,7 +1100,7 @@ MediaFileUpload.defaultProps ={
             signingUrlMethod:"GET",
             autoUpload:true,
             signingUrlWithCredentials:true,
-            uploadRequestHeaders:{{ 'x-amz-acl': 'public-read' }}  ,
+            uploadRequestHeaders:{ 'x-amz-acl': 'public-read' } ,
             contentDisposition:"auto"
             
         };
