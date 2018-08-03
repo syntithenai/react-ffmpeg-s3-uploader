@@ -3,6 +3,18 @@ react-s3-uploader
 
 Provides a `React` component that allows for crop of image/audio/video files then uploads to an S3 Bucket.
 
+All the transcoding is done by the browser client and the file is uploaded directly to Amazon S3 to minimise server load and network bandwidth.
+
+wavesurfer.js is used to show an audio/video timeline for cropping.
+
+Multiple versions of the selected file are uploaded to Amazon S3.
+For video file types, mp4 and webm video are created.
+For audio file types, mp3 and webm audio are created.
+Image files are uploaded as png.
+
+Video transcoding is relatively slow but workable for files up to about 50MB.
+Selected files must be cropped with audio limited to 90 seconds and video 20 seconds (as defaults)
+
 
 Install
 -----------
@@ -35,6 +47,10 @@ See App.js for an example
     onFinish={this.finishUploadMedia}
 />
 ```
+
+onFinish is called with an object containing public url's for each uploaded file
+
+
 
 
 Adding routes
