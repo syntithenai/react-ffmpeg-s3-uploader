@@ -32,6 +32,7 @@ Update CORS on your bucket as described below.
 Start the example server
 ```
 cd react-ffmpeg-s3-uploader
+npm install
 ./run_example.sh
 ```
 
