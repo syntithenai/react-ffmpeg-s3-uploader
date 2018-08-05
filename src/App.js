@@ -53,9 +53,9 @@ class App extends Component {
         Based on <br/>
         <a href='https://github.com/odysseyscience/react-s3-uploader'>react-s3-uploader</a><br/>
         Using <br/>
-        <a href='http://bgrins.github.io/videoconverter.js/'>browser based transcoder</a><br/>
+        <a href='http://bgrins.github.io/videoconverter.js/'>videoconverter.js browser based transcoder</a><br/>
         <a href='https://github.com/Kagami/ffmpeg.js'>kagami mp3/mp4 codecs</a><br/>
-        
+        <a href='https://wavesurfer-js.org/'>wavesurfer mp3 waveform display</a><br/>
         </div>
       </div>
     );
