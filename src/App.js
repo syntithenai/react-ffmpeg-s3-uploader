@@ -18,14 +18,9 @@ class App extends Component {
       <h1>Transcoding File Uploader Demo</h1>
       <div>
       Select a file to transcode and upload to Amazon S3.
-      Multiple files are created to ensure media formats for all web platforms.
-      <ul>
-        <li>Audio Files are transcoded to webm audio, mp3 and mp3 low quality (for google home and alexa).</li>
-        <li>Video Files are transcoded to mp4 and webm video.</li>
-        <li>Image Files are transcoded to png.</li>
-      </ul>
-      See the javascript console for the final callback with amazon urls.
+      
       </div>
+      
       <br/>
       <hr/>
         <MediaFileUpload
@@ -35,6 +30,18 @@ class App extends Component {
             onFinish={this.finishUploadMedia}
         />
         <hr/>
+        <br/>
+      <div>
+      Multiple files are created to ensure media formats for all web platforms. <br/>
+      All the transcoding is done by the browser client and the file is uploaded directly to Amazon S3 to minimise load and network bandwidth on your server.
+      <ul>
+        <li>Audio Files are transcoded to webm audio, mp3 and mp3 low quality (for google home and alexa).</li>
+        <li>Video Files are transcoded to mp4 and webm video.</li>
+        <li>Image Files are transcoded to png.</li>
+      </ul>
+      See the javascript console for the final callback with amazon urls.
+      <hr/>
+      </div>
         <div>
         <br/><br/>
         Another open source project supported by the team at <br/>
