@@ -15,14 +15,11 @@ var React = require('react'),
  * - additional waveform preview for audio/video formats using wavesurfer.js
  * - UI to select crop range of image/audio/video formats
  * - final crop/transcode and upload to S3 in a variety of formats to ensure media formats exist to support the widest range of clients.
- *      - image => jpg
+ *      - image => png
  *      - audio => mp3lq(alexa/googlehome), mp3 and audio.webm
  *      - video => mp3lq(alexa/googlehome), mp4 and video.webm
- * - files are generated and saved to localStorage as they are generated and uploaded as the final step to make the 
- * change as close as possible to atomic while minimising memory usage.
  * 
- * !! All transcoding is done in the browser client using ffmpeg (via emscripten). This is great for reducing the load on a web server but TRANSCODING MAY FAIL for clients with limited memory and is slower that running ffmpeg natively.
- * By default 
+ * !! All transcoding is done in the browser client using ffmpeg (via emscripten). This is great for reducing the load on a web server but TRANSCODING MAY FAIL for clients with limited memory and is slower that running ffmpeg natively. 50MB video files seem fine and transcode within a minute.
  * 
  * Using this component requires three routes to your node.js server.
  * /worker/[mp4|webm|other]  to deliver the javascript of the various worker threads
@@ -876,7 +873,9 @@ class MediaFileUpload extends React.Component {
                 that.setState({ imageUrl: canvas.toDataURL(), imageUrlPreview:null ,content:content})
                 let file=new File([content],that.state.fileNameOut,{'type':that.state.fileTypeOut});
                 that.uploadFile(file).then(function() {
-                    that.setState({active:false});
+                    console.log(['image ulaoded']);
+                    that.setState({active:false,imageUrl:that.state.uploaded.png});
+                    //imageUrl:uploaded.png
                 });
             };
             canvas.toBlob(function(blob) {
