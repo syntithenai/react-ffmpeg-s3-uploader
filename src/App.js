@@ -39,7 +39,8 @@ class App extends Component {
         <li>Video Files are transcoded to mp4 and webm video.</li>
         <li>Image Files are transcoded to png.</li>
       </ul>
-      See the javascript console for the final callback with amazon urls.
+      
+      Documentation on <a href="https://github.com/syntithenai/react-ffmpeg-s3-uploader">github</a>.
       <hr/>
       </div>
         <div>
